@@ -9,13 +9,17 @@ package bdtransactionsmanagement;
  *
  * @author Rui Paredes
  */
+
+import java.sql.*;
+
+
 public class BDTransactionsManagement {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        
     }
     
 }
