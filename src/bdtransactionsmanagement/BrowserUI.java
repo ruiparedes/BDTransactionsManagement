@@ -5,10 +5,15 @@
  */
 package bdtransactionsmanagement;
 
+import java.awt.event.MouseAdapter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.*;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import net.proteanit.sql.DbUtils;
 
 /**
  *
@@ -21,6 +26,7 @@ public class BrowserUI extends javax.swing.JFrame {
      */
     public BrowserUI() {
         initComponents();
+        getFaturasTable();
     }
 
     /**
@@ -36,9 +42,9 @@ public class BrowserUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        Faturas_Table = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        FaturaLinhas_Table = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Browser");
@@ -49,9 +55,9 @@ public class BrowserUI extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         jLabel2.setText("Linhas da Fatura");
 
-        jTable1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jTable1.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        Faturas_Table.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Faturas_Table.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
+        Faturas_Table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -78,13 +84,18 @@ public class BrowserUI extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(jTable1);
+        Faturas_Table.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        Faturas_Table.getTableHeader().setReorderingAllowed(false);
+        Faturas_Table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Faturas_TableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(Faturas_Table);
 
-        jTable2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jTable2.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        FaturaLinhas_Table.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        FaturaLinhas_Table.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
+        FaturaLinhas_Table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -111,9 +122,9 @@ public class BrowserUI extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jTable2.getTableHeader().setReorderingAllowed(false);
-        jScrollPane2.setViewportView(jTable2);
+        FaturaLinhas_Table.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        FaturaLinhas_Table.getTableHeader().setReorderingAllowed(false);
+        jScrollPane2.setViewportView(FaturaLinhas_Table);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -134,8 +145,8 @@ public class BrowserUI extends javax.swing.JFrame {
                 .addGap(42, 42, 42)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -156,21 +167,37 @@ public class BrowserUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void Faturas_TableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Faturas_TableMouseClicked
+        int column = 0;
+        int row = Faturas_Table.getSelectedRow();
+        int faturaID = (Integer) Faturas_Table.getModel().getValueAt(row, column);
+        System.out.println(faturaID);
+        getFaturasListaTable(faturaID);
+        
+    }//GEN-LAST:event_Faturas_TableMouseClicked
+
     /**
      * @param args the command line arguments
      */
+    public void getFaturasTable() {
+
+        String getFaturasQuery = "SELECT * FROM dbo.Factura";
+        ResultSet resFaturas = resultadoQuery(getFaturasQuery);
+        Faturas_Table.setModel(DbUtils.resultSetToTableModel(resFaturas));
+        Faturas_Table.setDefaultEditor(Object.class, null);
+
+    }
+    
+    public void getFaturasListaTable(int faturaID) {
+
+        String getFaturaListaQuery = "SELECT * FROM dbo.FactLinha where FacturaID ="+faturaID;
+        ResultSet resFaturaLista = resultadoQuery(getFaturaListaQuery);
+        FaturaLinhas_Table.setModel(DbUtils.resultSetToTableModel(resFaturaLista));
+        FaturaLinhas_Table.setDefaultEditor(Object.class, null);
+
+    }
+
     public static void main(String args[]) {
-
-        ResultSet res = resultadoQuery("select Nome from dbo.Factura where FacturaID=1");
-        try {
-            while (res.next()) {
-                String Nome = res.getString(1);
-                System.out.println(Nome);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
 
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -224,12 +251,12 @@ public class BrowserUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable FaturaLinhas_Table;
+    private javax.swing.JTable Faturas_Table;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
     // End of variables declaration//GEN-END:variables
 }
