@@ -14,19 +14,35 @@ import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
+import java.util.Timer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
  * @author Rui Paredes
  */
-public class BrowserUI extends javax.swing.JFrame {
 
+
+public class BrowserUI extends javax.swing.JFrame {
+    
+public int time=1;
+public int faturaSelecionada = -1;
     /**
      * Creates new form BrowserUI
      */
     public BrowserUI() {
         initComponents();
         getFaturasTable();
+        Runnable refreshTables = new Runnable() {
+            public void run() {
+                getFaturasTable();
+                getFaturasListaTable(faturaSelecionada);
+            }
+        };
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(refreshTables, 0, time, TimeUnit.SECONDS);
     }
 
     /**
@@ -142,11 +158,11 @@ public class BrowserUI extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(42, 42, 42)
+                .addGap(62, 62, 62)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -172,8 +188,9 @@ public class BrowserUI extends javax.swing.JFrame {
         int row = Faturas_Table.getSelectedRow();
         int faturaID = (Integer) Faturas_Table.getModel().getValueAt(row, column);
         System.out.println(faturaID);
+        faturaSelecionada = faturaID;
         getFaturasListaTable(faturaID);
-        
+
     }//GEN-LAST:event_Faturas_TableMouseClicked
 
     /**
@@ -187,10 +204,10 @@ public class BrowserUI extends javax.swing.JFrame {
         Faturas_Table.setDefaultEditor(Object.class, null);
 
     }
-    
+
     public void getFaturasListaTable(int faturaID) {
 
-        String getFaturaListaQuery = "SELECT * FROM dbo.FactLinha where FacturaID ="+faturaID;
+        String getFaturaListaQuery = "SELECT * FROM dbo.FactLinha where FacturaID =" + faturaID;
         ResultSet resFaturaLista = resultadoQuery(getFaturaListaQuery);
         FaturaLinhas_Table.setModel(DbUtils.resultSetToTableModel(resFaturaLista));
         FaturaLinhas_Table.setDefaultEditor(Object.class, null);
@@ -226,6 +243,7 @@ public class BrowserUI extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new BrowserUI().setVisible(true);
+
             }
         });
     }
