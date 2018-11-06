@@ -5,17 +5,25 @@
  */
 package bdtransactionsmanagement;
 
+import static bdtransactionsmanagement.BrowserUI.resultadoQuery;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import net.proteanit.sql.DbUtils;
+
 /**
  *
  * @author Rui Paredes
  */
-public class LogOperacoesUI extends javax.swing.JFrame {
-
+public class LogOperacoesUI extends javax.swing.JFrame { 
     /**
      * Creates new form LogOperacoesUI
      */
     public LogOperacoesUI() {
         initComponents();
+        nOperations_textField.setHorizontalAlignment(nOperations_textField.CENTER);
+        refresh_textField.setHorizontalAlignment(refresh_textField.CENTER);
     }
 
     /**
@@ -31,14 +39,16 @@ public class LogOperacoesUI extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        logOperations_Table = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         nOperations_textField = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        jTextField2 = new javax.swing.JTextField();
+        refresh_textField = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        verOperacoes_button = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(800, 600));
@@ -48,7 +58,7 @@ public class LogOperacoesUI extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         jLabel1.setText("Log Operações");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        logOperations_Table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null, null},
@@ -74,10 +84,11 @@ public class LogOperacoesUI extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(logOperations_Table);
 
         jLabel2.setText("Total Operações: ");
 
+        nOperations_textField.setText("0");
         nOperations_textField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nOperations_textFieldActionPerformed(evt);
@@ -88,9 +99,25 @@ public class LogOperacoesUI extends javax.swing.JFrame {
 
         jButton1.setText("Refresh");
 
+        refresh_textField.setText("1");
+
         jLabel4.setText("(s)");
 
-        jButton2.setText("Ver Operações");
+        verOperacoes_button.setText("Ver Operações");
+        verOperacoes_button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                verOperacoes_buttonMouseClicked(evt);
+            }
+        });
+        verOperacoes_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verOperacoes_buttonActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Níveis de Isolamento:");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Read Uncommitted", "Read Committed", "Repeatable Read", "Serializable" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -98,44 +125,55 @@ public class LogOperacoesUI extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jSeparator1)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 772, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(18, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(nOperations_textField, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
+                .addComponent(verOperacoes_button)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(refresh_textField, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(209, 209, 209)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addComponent(jLabel1)
-                .addGap(104, 104, 104)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(66, 66, 66)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(nOperations_textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(jButton1)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(refresh_textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
-                    .addComponent(jButton2))
+                    .addComponent(verOperacoes_button))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -161,9 +199,32 @@ public class LogOperacoesUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_nOperations_textFieldActionPerformed
 
+    private void verOperacoes_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verOperacoes_buttonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_verOperacoes_buttonActionPerformed
+
+    private void verOperacoes_buttonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_verOperacoes_buttonMouseClicked
+        String nOperacoes = nOperations_textField.getText();
+        getLogOperationsTable(nOperacoes);
+    }//GEN-LAST:event_verOperacoes_buttonMouseClicked
+
     /**
      * @param args the command line arguments
      */
+    
+    
+    public void getLogOperationsTable(String topOperations) {
+
+        String getFaturaListaQuery = "select TOP "+topOperations+" * from dbo.LogOperations order by DCriacao desc;";
+        ResultSet resFaturaLista = resultadoQuery(getFaturaListaQuery);
+        logOperations_Table.setModel(DbUtils.resultSetToTableModel(resFaturaLista));
+        logOperations_Table.setDefaultEditor(Object.class, null);
+
+    }
+    
+    
+    
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -195,19 +256,45 @@ public class LogOperacoesUI extends javax.swing.JFrame {
             }
         });
     }
+    
+    public static ResultSet resultadoQuery(String query) {
+        Sql sqlconnection = new Sql();
+        Connection conne = null;
+        Statement stmt = null;
+        try {
+            conne = sqlconnection.conect();
+
+            if (conne != null) {
+                System.out.println("Database Successfully connected");
+                stmt = conne.createStatement();
+                String selectQ = query;
+                ResultSet rset = stmt.executeQuery(selectQ);
+                return rset;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTable logOperations_Table;
     private javax.swing.JTextField nOperations_textField;
+    private javax.swing.JTextField refresh_textField;
+    private javax.swing.JButton verOperacoes_button;
     // End of variables declaration//GEN-END:variables
 }
