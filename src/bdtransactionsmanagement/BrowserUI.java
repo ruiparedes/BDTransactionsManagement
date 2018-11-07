@@ -18,31 +18,40 @@ import java.util.Timer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.TimerTask;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  *
  * @author Rui Paredes
  */
-
-
 public class BrowserUI extends javax.swing.JFrame {
-    
-public int time=1;
-public int faturaSelecionada = -1;
+
+    private ScheduledFuture<?> futureTask;
+    private Runnable refreshRunnable;
+    private ScheduledExecutorService scheduledExecutorService;
+    public int refreshTime = 1;
+    public int faturaSelecionada = -1;
+
     /**
      * Creates new form BrowserUI
      */
     public BrowserUI() {
         initComponents();
         getFaturasTable();
-        Runnable refreshTables = new Runnable() {
+        
+        refreshTime_textField.setHorizontalAlignment(refreshTime_textField.CENTER);
+        scheduledExecutorService = Executors.newScheduledThreadPool(5);
+        
+        refreshRunnable = new Runnable() {
+            @Override
             public void run() {
+                System.out.println("Tempo refresh:" + refreshTime);
                 getFaturasTable();
                 getFaturasListaTable(faturaSelecionada);
             }
         };
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(refreshTables, 0, time, TimeUnit.SECONDS);
+        changeReadInterval(refreshTime);
     }
 
     /**
@@ -61,6 +70,11 @@ public int faturaSelecionada = -1;
         Faturas_Table = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         FaturaLinhas_Table = new javax.swing.JTable();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        refreshTime_textField = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        refresh_button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Browser");
@@ -142,27 +156,79 @@ public int faturaSelecionada = -1;
         FaturaLinhas_Table.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(FaturaLinhas_Table);
 
+        jLabel3.setFont(new java.awt.Font("Verdana", 0, 24)); // NOI18N
+        jLabel3.setText("Browser");
+
+        jLabel4.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
+        jLabel4.setText("Atualização: ");
+
+        refreshTime_textField.setText("1");
+        refreshTime_textField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshTime_textFieldActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
+        jLabel5.setText("(s)");
+
+        refresh_button.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        refresh_button.setText("Refresh");
+        refresh_button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                refresh_buttonMouseClicked(evt);
+            }
+        });
+        refresh_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refresh_buttonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(46, 46, 46)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 708, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 708, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(46, 46, 46)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 708, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel1)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel4)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(refreshTime_textField, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jLabel5)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(refresh_button))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 708, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(37, 37, 37)
+                        .addComponent(jLabel3)))
                 .addContainerGap(46, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(62, 62, 62)
-                .addComponent(jLabel1)
+                .addGap(21, 21, 21)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel4)
+                        .addComponent(refreshTime_textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel5)
+                        .addComponent(refresh_button)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -182,7 +248,15 @@ public int faturaSelecionada = -1;
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+public void changeReadInterval(long time) {
+        if (refreshTime > 0) {
+            if (futureTask != null) {
+                futureTask.cancel(true);
+            }
 
+            futureTask = scheduledExecutorService.scheduleAtFixedRate(refreshRunnable, 0, time, TimeUnit.SECONDS);
+        }
+    }
     private void Faturas_TableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Faturas_TableMouseClicked
         int column = 0;
         int row = Faturas_Table.getSelectedRow();
@@ -192,6 +266,20 @@ public int faturaSelecionada = -1;
         getFaturasListaTable(faturaID);
 
     }//GEN-LAST:event_Faturas_TableMouseClicked
+
+    private void refreshTime_textFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshTime_textFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_refreshTime_textFieldActionPerformed
+
+    private void refresh_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refresh_buttonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_refresh_buttonActionPerformed
+
+    private void refresh_buttonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refresh_buttonMouseClicked
+        refreshTime = Integer.parseInt(refreshTime_textField.getText());
+        System.out.println("Tempo Atual de refresh:" + refreshTime);
+        changeReadInterval(refreshTime);
+    }//GEN-LAST:event_refresh_buttonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -273,8 +361,13 @@ public int faturaSelecionada = -1;
     private javax.swing.JTable Faturas_Table;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextField refreshTime_textField;
+    private javax.swing.JButton refresh_button;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,18 +5,27 @@
  */
 package bdtransactionsmanagement;
 
-import static bdtransactionsmanagement.BrowserUI.resultadoQuery;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import net.proteanit.sql.DbUtils;
 
 /**
  *
  * @author Rui Paredes
  */
-public class LogOperacoesUI extends javax.swing.JFrame { 
+public class LogOperacoesUI extends javax.swing.JFrame {
+
+    private ScheduledFuture<?> futureTask;
+    private Runnable refreshRunnable;
+    private ScheduledExecutorService scheduledExecutorService;
+    public int refreshTime = 1;
+
     /**
      * Creates new form LogOperacoesUI
      */
@@ -24,6 +33,27 @@ public class LogOperacoesUI extends javax.swing.JFrame {
         initComponents();
         nOperations_textField.setHorizontalAlignment(nOperations_textField.CENTER);
         refresh_textField.setHorizontalAlignment(refresh_textField.CENTER);
+
+        scheduledExecutorService = Executors.newScheduledThreadPool(5);
+
+        refreshRunnable = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Tempo refresh:" + refreshTime);
+
+            }
+        };
+        changeReadInterval(refreshTime);
+    }
+
+    public void changeReadInterval(long time) {
+        if (refreshTime > 0) {
+            if (futureTask != null) {
+                futureTask.cancel(true);
+            }
+
+            futureTask = scheduledExecutorService.scheduleAtFixedRate(refreshRunnable, 0, time, TimeUnit.SECONDS);
+        }
     }
 
     /**
@@ -55,9 +85,10 @@ public class LogOperacoesUI extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(800, 600));
         setSize(new java.awt.Dimension(800, 600));
 
-        jLabel1.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Verdana", 0, 24)); // NOI18N
         jLabel1.setText("Log Operações");
 
+        logOperations_Table.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
         logOperations_Table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null, null},
@@ -86,8 +117,10 @@ public class LogOperacoesUI extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(logOperations_Table);
 
+        jLabel2.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         jLabel2.setText("Total Operações: ");
 
+        nOperations_textField.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         nOperations_textField.setText("0");
         nOperations_textField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -95,14 +128,23 @@ public class LogOperacoesUI extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         jLabel3.setText("Atualização: ");
 
+        jButton1.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         jButton1.setText("Refresh");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
 
         refresh_textField.setText("1");
 
+        jLabel4.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         jLabel4.setText("(s)");
 
+        verOperacoes_button.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         verOperacoes_button.setText("Ver Operações");
         verOperacoes_button.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -115,8 +157,10 @@ public class LogOperacoesUI extends javax.swing.JFrame {
             }
         });
 
+        jLabel5.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         jLabel5.setText("Níveis de Isolamento:");
 
+        jComboBox1.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Read Uncommitted", "Read Committed", "Repeatable Read", "Serializable" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -138,30 +182,28 @@ public class LogOperacoesUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jButton1))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(209, 209, 209)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
+                .addGap(21, 21, 21)
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
+                .addGap(33, 33, 33)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -208,23 +250,24 @@ public class LogOperacoesUI extends javax.swing.JFrame {
         getLogOperationsTable(nOperacoes);
     }//GEN-LAST:event_verOperacoes_buttonMouseClicked
 
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+      refreshTime = Integer.parseInt(refresh_textField.getText());
+        System.out.println("Tempo Atual de refresh:" + refreshTime);
+        changeReadInterval(refreshTime);
+    }//GEN-LAST:event_jButton1MouseClicked
+
     /**
      * @param args the command line arguments
      */
-    
-    
     public void getLogOperationsTable(String topOperations) {
 
-        String getFaturaListaQuery = "select TOP "+topOperations+" * from dbo.LogOperations order by DCriacao desc;";
+        String getFaturaListaQuery = "select TOP " + topOperations + " * from dbo.LogOperations order by DCriacao desc;";
         ResultSet resFaturaLista = resultadoQuery(getFaturaListaQuery);
         logOperations_Table.setModel(DbUtils.resultSetToTableModel(resFaturaLista));
         logOperations_Table.setDefaultEditor(Object.class, null);
 
     }
-    
-    
-    
-    
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -256,7 +299,7 @@ public class LogOperacoesUI extends javax.swing.JFrame {
             }
         });
     }
-    
+
     public static ResultSet resultadoQuery(String query) {
         Sql sqlconnection = new Sql();
         Connection conne = null;
@@ -277,9 +320,6 @@ public class LogOperacoesUI extends javax.swing.JFrame {
         return null;
     }
 
-    
-    
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
