@@ -39,7 +39,7 @@ public class LogOperacoesUI extends javax.swing.JFrame {
         refreshRunnable = new Runnable() {
             @Override
             public void run() {
-                System.out.println("Tempo refresh:" + refreshTime);
+                //System.out.println("Tempo refresh:" + refreshTime);
 
             }
         };
@@ -162,7 +162,7 @@ public class LogOperacoesUI extends javax.swing.JFrame {
         });
 
         jLabel5.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
-        jLabel5.setText("Níveis de Isolamento:");
+        jLabel5.setText("Nível de Isolamento:");
 
         jComboBox1.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Read Uncommitted", "Read Committed", "Repeatable Read", "Serializable" }));

@@ -77,6 +77,7 @@ public class BrowserUI extends javax.swing.JFrame {
         refresh_button = new javax.swing.JButton();
         isolationLevel_comboBox = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
+        test_button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Browser");
@@ -193,6 +194,13 @@ public class BrowserUI extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         jLabel6.setText("Nível de Isolamento:");
 
+        test_button.setText("Vaidar");
+        test_button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                test_buttonMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -219,6 +227,8 @@ public class BrowserUI extends javax.swing.JFrame {
                                         .addComponent(refresh_button)
                                         .addGap(34, 34, 34))))
                             .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(test_button)
+                                .addGap(105, 105, 105)
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(isolationLevel_comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -238,8 +248,11 @@ public class BrowserUI extends javax.swing.JFrame {
                         .addGap(44, 44, 44)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(isolationLevel_comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                            .addComponent(jLabel6)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(62, 62, 62)
+                        .addComponent(test_button)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel4)
@@ -302,6 +315,13 @@ public void changeReadInterval(long time) {
         changeReadInterval(refreshTime);
     }//GEN-LAST:event_refresh_buttonMouseClicked
 
+    private void test_buttonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_test_buttonMouseClicked
+        Thread t1 = new Thread(new MultiQueries());
+        t1.start();
+
+//resultadoQuery("Begin Transaction update Factura set Nome = 'JoaoFranchesca' where Factura.FacturaID = 1 WAITFOR DELAY '00:00:10' ROLLBACK;");
+    }//GEN-LAST:event_test_buttonMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -317,7 +337,7 @@ public void changeReadInterval(long time) {
 
     public void getFaturasListaTable(int faturaID) {
         String isolationLevel = isolationLevel_comboBox.getSelectedItem().toString();
-        String getFaturaListaQuery = "set transaction isolation level " + isolationLevel+" SELECT * FROM dbo.FactLinha where FacturaID =" + faturaID;
+        String getFaturaListaQuery = "set transaction isolation level " + isolationLevel + " SELECT * FROM dbo.FactLinha where FacturaID =" + faturaID;
         ResultSet resFaturaLista = resultadoQuery(getFaturaListaQuery);
         FaturaLinhas_Table.setModel(DbUtils.resultSetToTableModel(resFaturaLista));
         FaturaLinhas_Table.setDefaultEditor(Object.class, null);
@@ -366,7 +386,7 @@ public void changeReadInterval(long time) {
             conne = sqlconnection.conect();
 
             if (conne != null) {
-                System.out.println("Database Successfully connected");
+
                 stmt = conne.createStatement();
                 String selectQ = query;
                 ResultSet rset = stmt.executeQuery(selectQ);
@@ -393,5 +413,6 @@ public void changeReadInterval(long time) {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField refreshTime_textField;
     private javax.swing.JButton refresh_button;
+    private javax.swing.JButton test_button;
     // End of variables declaration//GEN-END:variables
 }
