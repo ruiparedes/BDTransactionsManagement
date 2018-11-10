@@ -36,8 +36,8 @@ public class Edit extends javax.swing.JFrame {
 
     String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     String url = "jdbc:sqlserver://;databaseName=TBD_TRAB1";
-    String username = "Admin";
-    String password = "123qwe.";
+    String username = "galactic21";
+    String password = "wanrltw1";
     String Atr1 = null;
     String Atr2 = null;
     String Atr3 = null;

@@ -200,6 +200,11 @@ public class BrowserUI extends javax.swing.JFrame {
                 test_buttonMouseClicked(evt);
             }
         });
+        test_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                test_buttonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -321,6 +326,10 @@ public void changeReadInterval(long time) {
 
 //resultadoQuery("Begin Transaction update Factura set Nome = 'JoaoFranchesca' where Factura.FacturaID = 1 WAITFOR DELAY '00:00:10' ROLLBACK;");
     }//GEN-LAST:event_test_buttonMouseClicked
+
+    private void test_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_test_buttonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_test_buttonActionPerformed
 
     /**
      * @param args the command line arguments
