@@ -22,7 +22,7 @@ public class Sql {
     public Connection conect() throws SQLException{
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection("jdbc:sqlserver://;databaseName=TBD_TRAB1", "galactic21", "wanrltw1");
+            conn = DriverManager.getConnection("jdbc:sqlserver://;databaseName=TBD_TRAB1", "Admin", "admin");
 
             if (conn != null) {
                 System.out.println("Database Successfully connected");
