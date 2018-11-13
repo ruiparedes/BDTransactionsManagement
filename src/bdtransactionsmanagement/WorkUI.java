@@ -12,6 +12,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Random;
@@ -71,7 +72,7 @@ public class WorkUI extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "READ COMMITED", "READ UNCOMMITED", "REPEATABLE READ", "SERIALIZABLE" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Read Uncommitted", "Read Committed", "Repeatable Read", "Serializable" }));
 
         jLabel6.setText("20%");
 
@@ -221,57 +222,101 @@ public class WorkUI extends javax.swing.JFrame {
     private DateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmssZ");
     private Date date = new Date() ; 
     private String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-    private String url = "jdbc:sqlserver://DESKTOP-SINCFA7\\MSSQLSERVER2;databaseName=TBD_TRAB1";
+    private String url = "jdbc:sqlserver://;databaseName=TBD_TRAB1";
     private String username = "aluno";
     private String password = "aluno";
-    private String isolationlevel = "SERIALIZABLE";
-    private ResultSet rs = null;                                  
+    private ResultSet rs = null;
+    private String ref = "";
+    private String isolationlevel;
 
    private void update() {
-        query("select MAX(FacturaID) from  Factura;");
+        query("select MAX(FacturaID) from Factura;");
         int maxfact = 0;
         try {
-            maxfact = rs.getInt(1);
+            if (rs.next()) {
+                    maxfact = rs.getInt(1);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         rs = null;
         Random rd = new Random();
-        int rand = rd.nextInt(maxfact);
+        int rand = rd.nextInt(maxfact+1);
+        boolean valueIsPresent = false;
+        query("select * from Factura where FacturaID = " + rand + ";");
+        try {
+            if (rs.next()) {
+                valueIsPresent = true;
+            }
+            while(valueIsPresent == false){
+               rand = rd.nextInt(maxfact+1); 
+               query("select * from Factura where FacturaID = " + rand + ";"); 
+               if (rs.next()) {
+                    valueIsPresent = true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         date = new Date() ;
-        query("Insert into LogOperations(EventType,Objeto,Valor,Referencia) Values ('U','BEGIN', 'Fatura'," + rand + "," + dateFormat.format(date) + ");");
-        query("BEGIN TRANSACTION");
-        query("SET TRANSACTION ISOLATION LEVEL " + isolationlevel);
-        query_update("UPDATE Factura SET nome = 'ABC' where FacturaID = " + rand + ";",rand);
-        query("COMMIT;");
-        query("Insert into LogOperations(EventType,Objeto,Valor,Referencia) Values ('U','COMMIT', 'Fatura'," + rand + "," + dateFormat.format(date) + ");");
+        ref = dateFormat.format(date).toString();
+        
+        try {
+            query("Insert into LogOperations(EventType,Objecto,Valor,Referencia) Values ('U','Begin Transaction', " + rand + "," +ref + ");");
+            query_uid("UPDATE Factura SET nome = 'ABC' where FacturaID = " + rand + ";");// set transaction isolation level " + isolationlevel + " select Nome from Factura where FacturaID = " + rand + ";");
+            query("Insert into LogOperations(EventType,Objecto,Valor,Referencia) Values ('U','COMMIT', " + rand + "," + ref + ");");
+        } catch (ClassNotFoundException | SQLException ex) {
+            query("Insert into LogOperations(EventType,Objecto,Valor,Referencia) Values ('U','ROLLBACK'," + rand + "," + ref + ");");
+        }        
    }
 
 	private void delete() {
             query("select MAX(FacturaID) from Factura;");
             int maxfact = 0;
             try {
-                maxfact = rs.getInt(1);
+                if (rs.next()) {
+                    maxfact = rs.getInt(1);
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
             Random rd = new Random();
-            int rand = rd.nextInt(maxfact);
+            int rand = rd.nextInt(maxfact+1); 
+            boolean valueIsPresent = false;
+            query("select * from Factura where FacturaID = " + rand + ";");
+            try {
+                if (rs.next()) {
+                    valueIsPresent = true;
+                }
+                while(valueIsPresent == false){
+                   rand = rd.nextInt(maxfact+1); 
+                   query("select * from Factura where FacturaID = " + rand + ";"); 
+                   if (rs.next()) {
+                        valueIsPresent = true;
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             date = new Date() ;
-            query("Insert into LogOperations(EventType,Objeto,Valor,Referencia) Values ('D','BEGIN', 'Fatura e FactLinha'," + rand + "," + dateFormat.format(date) + ");");
-            query("BEGIN TRANSACTION");
-            query("SET TRANSACTION ISOLATION LEVEL " + isolationlevel);
-            query_delete("Delete from Factura where Factura.FacturaID = " + rand + ";",rand);
-            query_delete("Delete from FactLinha where FactLinha.FacturaID = " + rand + ";",rand);
-            query("COMMIT;");
-            query("Insert into LogOperations(EventType,Objeto,Valor,Referencia) Values ('D','COMMIT', 'Fatura e FactLinha'," + rand + "," + dateFormat.format(date) + ");");
+            ref = dateFormat.format(date).toString();
+            
+            try {
+                query("Insert into LogOperations(EventType,Objecto,Valor,Referencia) Values ('D','Begin Transaction'," + rand + "," + ref + ");");
+                query_uid("Delete from FactLinha where FactLinha.FacturaID = " + rand + " Delete from Factura where Factura.FacturaID = " + rand + ";");//set transaction isolation level " + isolationlevel + " select * from  FactLinha,Fatura where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = " + rand + ";");
+                query("Insert into LogOperations(EventType,Objecto,Valor,Referencia) Values ('D','COMMIT', " + rand + "," + ref + ");");
+            } catch (ClassNotFoundException | SQLException ex) {
+                query("Insert into LogOperations(EventType,Objecto,Valor,Referencia) Values ('D','ROLLBACK'," + rand + "," + ref + ");");
+            }
 	}
 
 	private void insert() {
             query("select MAX(FacturaID) from Factura;");
             int maxfact = 0;
             try {
-                maxfact = rs.getInt(1);
+                if (rs.next()) {
+                    maxfact = rs.getInt(1);
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -279,71 +324,63 @@ public class WorkUI extends javax.swing.JFrame {
             int cliente = 5;
             int produto1 = 10;
             int produto2 = 11;
+            double preco1 = 10;
+            double preco2 = 153.99;
+            int qtd1 = 1;
+            int qtd2 = 2;
             date = new Date() ;
-            query("Insert into LogOperations(EventType,Objeto,Valor,Referencia) Values ('I','BEGIN', 'Fatura e FactLinha'," + newfactid + "," + dateFormat.format(date) + ");");
-            query("BEGIN TRANSACTION");
-            query("SET TRANSACTION ISOLATION LEVEL " + isolationlevel);
-            query_insert("INSERT INTO Factura(FaturaID,ClienteID,Nome) VALUES (" + newfactid  +"," + cliente + ",'Insert Nome');",newfactid);
-            query_insert("INSERT INTO FactLinha(FaturaID,ProdutoID,Designacao) VALUES (" + newfactid  +"," + produto1+",'Insert Produto');",newfactid);
-            query_insert("INSERT INTO FactLinha(FaturaID,ProdutoID,Designacao) VALUES (" + newfactid  +"," + produto2+",'Insert Produto');",newfactid);
-            query("COMMIT;");
-            query("Insert into LogOperations(EventType,Objeto,Valor,Referencia) Values ('I','COMMIT', 'Fatura e FactLinha'," + newfactid + "," + dateFormat.format(date) + ");");	
+            ref = dateFormat.format(date).toString();
+            try {
+                query("Insert into LogOperations(EventType,Objecto,Valor,Referencia) Values ('I','Begin Transaction', " + newfactid + "," + ref + ");");
+                query_uid("INSERT INTO Factura(FacturaID,ClienteID,Nome) VALUES (" + newfactid  +"," + cliente + ",'Insert Nome') INSERT INTO FactLinha(FacturaID,ProdutoID,Designacao,Preco,Qtd) VALUES (" + newfactid  +"," + produto1+",'Insert Produto'," + preco1 +","+ qtd1 +") INSERT INTO FactLinha(FacturaID,ProdutoID,Designacao,Preco,Qtd) VALUES (" + newfactid  +"," + produto2+",'Insert Produto'," + preco2 +","+ qtd2 +");");// set transaction isolation level " + isolationlevel + " select Factura.FacturaID,ClienteID,Nome,FactLinha.FacturaID,Designacao,Preco,Qtd from Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = " + newfactid + ";");
+                query("Insert into LogOperations(EventType,Objecto,Valor,Referencia) Values ('I','COMMIT', " + newfactid + "," + ref + ");");
+            } catch (ClassNotFoundException | SQLException ex) {
+                query("Insert into LogOperations(EventType,Objecto,Valor,Referencia) Values ('I','ROLLBACK'," + newfactid + "," + ref + ");");
+            }
+            	
 	}
 
-   
    private void query(String sql){
       rs = null;
       try{
-          Class.forName(driver);
+          Class.forName(driver).newInstance();
           Connection con = DriverManager.getConnection(url, username, password);
-          PreparedStatement pst = con.prepareStatement(sql);
-          rs = pst.executeQuery();
-          /*Statement stmt = null;
-          stmt = con.createStatement();
-          String selectQ = sql;
-          rs = stmt.executeQuery(selectQ);*/
+          Statement stat = con.createStatement();
+          rs = stat.executeQuery(sql);
       }catch (Exception e){
+          //JOptionPane.showMessageDialog(this, e.getMessage());
       }
   }
-  
-  private void query_update(String sql, int update){
-        rs = null;
+   
+  private void query_uid(String sql)throws ClassNotFoundException, SQLException{ //Update/Insert/Delete
+        Class.forName(driver);  
+        Connection con = DriverManager.getConnection(url, username, password);
         try{
-            Class.forName(driver);
-            Connection con = DriverManager.getConnection(url, username, password);
-            PreparedStatement pst = con.prepareStatement(sql);
-            rs = pst.executeQuery();
-        }catch (Exception e){
-           query("ROLLBACK;");
-           query("Insert into LogOperations(EventType,Objeto,Valor,Referencia) Values ('U','ROLLBACK', 'Fatura'," + update + "," + dateFormat.format(date) + ");");
+          con.setAutoCommit(false);
+          PreparedStatement pst = con.prepareStatement(sql);
+          switch(jComboBox1.getSelectedIndex()){
+            case 1:
+                con.setTransactionIsolation(con.TRANSACTION_READ_UNCOMMITTED);
+                break;
+            case 2:
+                con.setTransactionIsolation(con.TRANSACTION_READ_COMMITTED);
+                break;
+            case 3:
+                con.setTransactionIsolation(con.TRANSACTION_REPEATABLE_READ);
+                break;
+            case 4:
+                con.setTransactionIsolation(con.TRANSACTION_SERIALIZABLE);
+                break;
+
+        }
+          pst.executeUpdate();
+          //Statement stat = con.createStatement();
+          //stat.executeQuery(sql);
+          con.commit();
+        }catch (SQLException e){
+           //JOptionPane.showMessageDialog(this, e.getMessage());
+           con.rollback();
         }
  }
-  
-  private void query_delete(String sql, int update){
-        rs = null;
-        try{
-            Class.forName(driver);
-            Connection con = DriverManager.getConnection(url, username, password);
-            PreparedStatement pst = con.prepareStatement(sql);
-            rs = pst.executeQuery();
-        }catch (Exception e){
-           date = new Date() ;
-           query("ROLLBACK;");
-           query("Insert into LogOperations(EventType,Objeto,Valor,Referencia) Values ('D','ROLLBACK', 'Fatura e FactLinha'," + update + "," + dateFormat.format(date) + ");");
-        }
-    }
-  private void query_insert(String sql, int update){
-        rs = null;
-        try{
-            Class.forName(driver);
-            Connection con = DriverManager.getConnection(url, username, password);
-            PreparedStatement pst = con.prepareStatement(sql);
-            rs = pst.executeQuery();
-        }catch (Exception e){
-           date = new Date() ;
-           query("ROLLBACK;");
-           query("Insert into LogOperations(EventType,Objeto,Valor,Referencia) Values ('I','ROLLBACK', 'Fatura e FactLinha'," + update + "," + dateFormat.format(date) + ");");
-        }
-    }
 
 }

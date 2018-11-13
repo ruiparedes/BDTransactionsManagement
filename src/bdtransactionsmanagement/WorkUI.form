@@ -142,10 +142,10 @@
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="4">
-            <StringItem index="0" value="READ COMMITED"/>
-            <StringItem index="1" value="READ UNCOMMITED"/>
-            <StringItem index="2" value="REPEATABLE READ"/>
-            <StringItem index="3" value="SERIALIZABLE"/>
+            <StringItem index="0" value="Read Uncommitted"/>
+            <StringItem index="1" value="Read Committed"/>
+            <StringItem index="2" value="Repeatable Read"/>
+            <StringItem index="3" value="Serializable"/>
           </StringArray>
         </Property>
       </Properties>
