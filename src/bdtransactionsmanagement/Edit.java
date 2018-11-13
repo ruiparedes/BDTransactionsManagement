@@ -503,7 +503,7 @@ public class Edit extends javax.swing.JFrame {
             System.out.println("Tempo de Update = " + (tfinal) / 1000.0 + " segundos\n");
             //JOptionPane.showMessageDialog(this, "Update com sucesso");
             queryLog("insert Into LogOperations(EventType,Objecto,Valor,Referencia) Values('U','Commit',?,'" + referencia + "')");
-
+            
             }
 
 
@@ -658,6 +658,7 @@ public class Edit extends javax.swing.JFrame {
                 break;
             case 4:
                 executar(sqlISO, sql1ISO, sql2ISO);
+                select_table(query);
                 select_table(query);
                 break;
 
