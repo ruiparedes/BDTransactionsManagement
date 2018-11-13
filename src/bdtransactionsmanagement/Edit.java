@@ -495,20 +495,17 @@ public class Edit extends javax.swing.JFrame {
                     System.out.println("O campo Designacao e nome foram alterado\n");
 
                 }
-                long tfinal = System.currentTimeMillis() - tinicial;
-
-                // jTextField6.setText(String.valueOf(total)); 
-                jTextField7.setText(String.valueOf((tfinal) / 1000.0));
-
-            }
-            long tfinal = System.currentTimeMillis() - tinicial;
+                         long tfinal = System.currentTimeMillis() - tinicial;
 
             // jTextField6.setText(String.valueOf(total)); 
             jTextField7.setText(String.valueOf((tfinal) / 1000.0));
 
             System.out.println("Tempo de Update = " + (tfinal) / 1000.0 + " segundos\n");
-            JOptionPane.showMessageDialog(this, "Update com sucesso");
+            //JOptionPane.showMessageDialog(this, "Update com sucesso");
             queryLog("insert Into LogOperations(EventType,Objecto,Valor,Referencia) Values('U','Commit',?,'" + referencia + "')");
+
+            }
+
 
             /*
            if(Atr3.matches(jTextField4.getText())){
