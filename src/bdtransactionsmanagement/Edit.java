@@ -21,7 +21,6 @@ import net.proteanit.sql.DbUtils;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author jelfr
@@ -41,8 +40,8 @@ public class Edit extends javax.swing.JFrame {
 
     String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     String url = "jdbc:sqlserver://;databaseName=TBD_TRAB1";
-    String username = "galactic21";
-    String password = "wanrltw1";
+    String username = "Admin";
+    String password = "123qwe.";
     String Atr1 = null;
     String Atr2 = null;
 
@@ -273,9 +272,9 @@ public class Edit extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-           String isolationLevel = jComboBox1.getSelectedItem().toString();
-        select_table("set transaction isolation level " + isolationLevel+" select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?;");
-  
+        String isolationLevel = jComboBox1.getSelectedItem().toString();
+        select_table("set transaction isolation level " + isolationLevel + " select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?;");
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     public String gerarReferencia() {
@@ -322,14 +321,13 @@ public class Edit extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Não existe a fatura. Tente Novamente!");
 
             }
-              long tfinal = System.currentTimeMillis()-tinicial;
-    
-     
-      // jTextField6.setText(String.valueOf(total)); 
-       jTextField6.setText(String.valueOf((tfinal)/1000.0));
+            long tfinal = System.currentTimeMillis() - tinicial;
 
-        System.out.println("Tempo de Pesquisa = " + (tfinal)/1000.0+" segundos\n");
-        }catch (Exception e){
+            // jTextField6.setText(String.valueOf(total)); 
+            jTextField6.setText(String.valueOf((tfinal) / 1000.0));
+
+            System.out.println("Tempo de Pesquisa = " + (tfinal) / 1000.0 + " segundos\n");
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
 
         }
@@ -385,126 +383,116 @@ public class Edit extends javax.swing.JFrame {
             queryLog("insert Into LogOperations(EventType,Objecto,Valor,Referencia) Values('U','Rollback',?,'" + referencia + "')");
         }
     }
-    
-    private void queryLog(String query){
-        
-        try{
-       Class.forName(driver);
+
+    private void queryLog(String query) {
+
+        try {
+            Class.forName(driver);
             Connection con = DriverManager.getConnection(url, username, password);
-    
-      
-                     PreparedStatement pst = con.prepareStatement(query);
-                   pst.setString(1, jTextField3.getText());
-                     pst.executeUpdate();
-                     
-          
-             }catch (ClassNotFoundException | SQLException e){
+
+            PreparedStatement pst = con.prepareStatement(query);
+            pst.setString(1, jTextField3.getText());
+            pst.executeUpdate();
+
+        } catch (ClassNotFoundException | SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
-         
+
         }
     }
-    
-    private void Statement1(String sql) throws ClassNotFoundException, SQLException{
-         Class.forName(driver);
-            Connection con = DriverManager.getConnection(url, username, password);
-        try{
-   
+
+    private void Statement1(String sql) throws ClassNotFoundException, SQLException {
+        Class.forName(driver);
+        Connection con = DriverManager.getConnection(url, username, password);
+        try {
+
             con.setAutoCommit(false);
-          
-                     PreparedStatement pst = con.prepareStatement(sql);
-                     pst.setString(1, jTextField1.getText());
-                     Atr1 = jTextField1.getText();
-                    // System.out.println(" Texto 3:"+text1);
-                     pst.setString(2, jTextField3.getText());
-                 
-                     pst.executeUpdate();
-                     
-                con.commit();
-       
-             }catch (SQLException e){
+
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, jTextField1.getText());
+            Atr1 = jTextField1.getText();
+            // System.out.println(" Texto 3:"+text1);
+            pst.setString(2, jTextField3.getText());
+
+            pst.executeUpdate();
+
+            con.commit();
+
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             con.rollback();
         }
     }
-    
-       private void Statement2(String sql) throws ClassNotFoundException, SQLException{
-           Class.forName(driver);
-            Connection con = DriverManager.getConnection(url, username, password);
-        try{
-            
-             con.setAutoCommit(false);
+
+    private void Statement2(String sql) throws ClassNotFoundException, SQLException {
+        Class.forName(driver);
+        Connection con = DriverManager.getConnection(url, username, password);
+        try {
+
+            con.setAutoCommit(false);
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, jTextField2.getText());
-              Atr2 = jTextField2.getText();
-             pst.setString(2, jTextField3.getText());
-             pst.setString(3, jTextField5.getText());
+            Atr2 = jTextField2.getText();
+            pst.setString(2, jTextField3.getText());
+            pst.setString(3, jTextField5.getText());
             //pst.setString(4, jTextField2.getText());
-             pst.executeUpdate();
-                  con.commit();
-       //JOptionPane.showMessageDialog(this, "Update com sucesso");
-       
-             }catch (SQLException e){
+            pst.executeUpdate();
+            con.commit();
+            //JOptionPane.showMessageDialog(this, "Update com sucesso");
+
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             con.rollback();
         }
     }
-          
-       private void Statement3(String sql , String sql2) throws ClassNotFoundException, SQLException{
-            Class.forName(driver);
-           Connection con = DriverManager.getConnection(url, username, password);
-        try{
 
-             con.setAutoCommit(false);
+    private void Statement3(String sql, String sql2) throws ClassNotFoundException, SQLException {
+        Class.forName(driver);
+        Connection con = DriverManager.getConnection(url, username, password);
+        try {
+
+            con.setAutoCommit(false);
             Statement1(sql);
             Statement2(sql2);
-                       con.commit();
-      
-             }catch (ClassNotFoundException | SQLException e){
+            con.commit();
+
+        } catch (ClassNotFoundException | SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             con.rollback();
         }
     }
 
-       private void executar(String sql,String sql1,String sql2){
-          long tinicial =System.currentTimeMillis();
+    private void executar(String sql, String sql1, String sql2) {
+        long tinicial = System.currentTimeMillis();
+        String referencia = gerarReferencia();
 
-        try{
-           
-             queryLog("insert Into LogOperations(EventType,Objecto,Valor,Referencia) Values('U','Begin Transaction',?,'" + referencia + "')");
-              System.out.println("\nNome 3:"+Atr1);
-                 System.out.println("\nDesignacao 3: "+Atr2);
-                 if(Atr1.matches(jTextField1.getText()) && Atr2.matches(jTextField2.getText())){
-                     JOptionPane.showMessageDialog(this, "Nenhum campo foi alterado!");
-            
-                 }else{
-                 
-                 if(Atr1.matches(jTextField1.getText()) && !Atr2.matches(jTextField2.getText())){
-              
-                       Statement5(sql1);
-                  
-               System.out.println("O campo nome nao foi alterado\n");
-                  
-              //   JOptionPane.showMessageDialog(this, "O campo Nome não foi alterado");
-              }else if(Atr2.matches(jTextField2.getText())&& !Atr1.matches(jTextField1.getText())){
-              
-                     Statement4(sql);
-                  
-         System.out.println("O campo Designacao nao foi alterado\n");
-                    
-                  }
-              
-                else if(!Atr2.matches(jTextField2.getText()) && !Atr1.matches(jTextField1.getText())){
-                Statement6(sql2);
-              
-                //JOptionPane.showMessageDialog(this, "Update com sucesso");
+        try {
+
+            queryLog("insert Into LogOperations(EventType,Objecto,Valor,Referencia) Values('U','Begin Transaction',?,'" + referencia + "')");
+            System.out.println("\nNome 3:" + Atr1);
+            System.out.println("\nDesignacao 3: " + Atr2);
+            if (Atr1.matches(jTextField1.getText()) && Atr2.matches(jTextField2.getText())) {
+                JOptionPane.showMessageDialog(this, "Nenhum campo foi alterado!");
+
+            } else {
+
+                if (Atr1.matches(jTextField1.getText()) && !Atr2.matches(jTextField2.getText())) {
+
+                    Statement5(sql1);
+
+                    System.out.println("O campo nome nao foi alterado\n");
+
+                    //   JOptionPane.showMessageDialog(this, "O campo Nome não foi alterado");
+                } else if (Atr2.matches(jTextField2.getText()) && !Atr1.matches(jTextField1.getText())) {
+
+                    Statement4(sql);
+
+                    System.out.println("O campo Designacao nao foi alterado\n");
+
+                } else if (!Atr2.matches(jTextField2.getText()) && !Atr1.matches(jTextField1.getText())) {
+                    Statement6(sql2);
+
+                    //JOptionPane.showMessageDialog(this, "Update com sucesso");
                     System.out.println("O campo Designacao e nome foram alterado\n");
-                
-           }
-                          long tfinal = System.currentTimeMillis()-tinicial;
-    
-     
-      // jTextField6.setText(String.valueOf(total)); 
-       jTextField7.setText(String.valueOf((tfinal)/1000.0));
 
                 }
                 long tfinal = System.currentTimeMillis() - tinicial;
@@ -512,10 +500,15 @@ public class Edit extends javax.swing.JFrame {
                 // jTextField6.setText(String.valueOf(total)); 
                 jTextField7.setText(String.valueOf((tfinal) / 1000.0));
 
-                System.out.println("Tempo de Update = " + (tfinal) / 1000.0 + " segundos\n");
-                JOptionPane.showMessageDialog(this, "Update com sucesso");
-                queryLog("insert Into LogOperations(EventType,Objecto,Valor,Referencia) Values('U','Commit',?,'" + referencia + "')");
             }
+            long tfinal = System.currentTimeMillis() - tinicial;
+
+            // jTextField6.setText(String.valueOf(total)); 
+            jTextField7.setText(String.valueOf((tfinal) / 1000.0));
+
+            System.out.println("Tempo de Update = " + (tfinal) / 1000.0 + " segundos\n");
+            JOptionPane.showMessageDialog(this, "Update com sucesso");
+            queryLog("insert Into LogOperations(EventType,Objecto,Valor,Referencia) Values('U','Commit',?,'" + referencia + "')");
 
             /*
            if(Atr3.matches(jTextField4.getText())){
@@ -533,159 +526,146 @@ public class Edit extends javax.swing.JFrame {
 
         }
     }
-    
-    private void Statement4(String sql) throws ClassNotFoundException, SQLException{
-     Class.forName(driver);
-            Connection con = DriverManager.getConnection(url, username, password);
-        try{
-     
-          con.setAutoCommit(false);
-                     PreparedStatement pst = con.prepareStatement(sql);
-                  
-                     pst.setString(1, jTextField1.getText());
-                     Atr1 = jTextField1.getText();
-                    // System.out.println(" Texto 3:"+text1);
-                     pst.setString(2, jTextField3.getText());
-                      pst.setString(3, jTextField3.getText());
-                 
-                           pst.executeUpdate();
-                         
-                
-                   
-                        //select_table(query);
-                      
-                      con.commit();
-                 
-             }catch (SQLException e){
-            JOptionPane.showMessageDialog(this, e.getMessage());
-           con.rollback();
-        }
-    }
-    
-       private void Statement5(String sql) throws ClassNotFoundException, SQLException{
-            Class.forName(driver);
-            Connection con = DriverManager.getConnection(url, username, password);
-        try{
-           
-          
+
+    private void Statement4(String sql) throws ClassNotFoundException, SQLException {
+        Class.forName(driver);
+        Connection con = DriverManager.getConnection(url, username, password);
+        try {
+
             con.setAutoCommit(false);
             PreparedStatement pst = con.prepareStatement(sql);
-            pst.setString(1, jTextField2.getText());
-              Atr2 = jTextField2.getText();
-             pst.setString(2, jTextField3.getText());
-             pst.setString(3, jTextField5.getText());
-               pst.setString(4, jTextField3.getText());
-             
-               pst.executeUpdate();
-               // select_table(query);
-                      
-                     
-       //JOptionPane.showMessageDialog(this, "Update com sucesso");
-        con.commit();
-             }catch (SQLException e){
+
+            pst.setString(1, jTextField1.getText());
+            Atr1 = jTextField1.getText();
+            // System.out.println(" Texto 3:"+text1);
+            pst.setString(2, jTextField3.getText());
+            pst.setString(3, jTextField3.getText());
+
+            pst.executeUpdate();
+
+            //select_table(query);
+            con.commit();
+
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             con.rollback();
         }
     }
-          
-       private void Statement6(String sql) throws ClassNotFoundException, SQLException{
-             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url, username, password);
-        try{
-          
-            
+
+    private void Statement5(String sql) throws ClassNotFoundException, SQLException {
+        Class.forName(driver);
+        Connection con = DriverManager.getConnection(url, username, password);
+        try {
+
             con.setAutoCommit(false);
             PreparedStatement pst = con.prepareStatement(sql);
-                      pst.setString(1, jTextField1.getText());
-                     Atr1 = jTextField1.getText();
-                    // System.out.println(" Texto 3:"+text1);
-                     pst.setString(2, jTextField3.getText());
-                    
-                 
+            pst.setString(1, jTextField2.getText());
+            Atr2 = jTextField2.getText();
+            pst.setString(2, jTextField3.getText());
+            pst.setString(3, jTextField5.getText());
+            pst.setString(4, jTextField3.getText());
+
+            pst.executeUpdate();
+            // select_table(query);
+
+            //JOptionPane.showMessageDialog(this, "Update com sucesso");
+            con.commit();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+            con.rollback();
+        }
+    }
+
+    private void Statement6(String sql) throws ClassNotFoundException, SQLException {
+        Class.forName(driver);
+        Connection con = DriverManager.getConnection(url, username, password);
+        try {
+
+            con.setAutoCommit(false);
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, jTextField1.getText());
+            Atr1 = jTextField1.getText();
+            // System.out.println(" Texto 3:"+text1);
+            pst.setString(2, jTextField3.getText());
+
             pst.setString(3, jTextField2.getText());
-              Atr2 = jTextField2.getText();
-             pst.setString(4, jTextField3.getText());
-             pst.setString(5, jTextField5.getText());
-               pst.setString(6, jTextField3.getText());
-               pst.executeUpdate();
-   
-             // select_table(query);
-                   con.commit();
+            Atr2 = jTextField2.getText();
+            pst.setString(4, jTextField3.getText());
+            pst.setString(5, jTextField5.getText());
+            pst.setString(6, jTextField3.getText());
+            pst.executeUpdate();
+
+            // select_table(query);
+            con.commit();
             // JOptionPane.showMessageDialog(this, "Update com sucesso");
-             }catch (SQLException e){
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             con.rollback();
         }
     }
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-       TableModel model = (TableModel)jTable1.getModel();
-       int selectedRow = jTable1.getSelectedRow();
-       jTextField1.setText(model.getValueAt(selectedRow, 0).toString());
-       jTextField2.setText(model.getValueAt(selectedRow, 1).toString());
-       jTextField5.setText(model.getValueAt(selectedRow, 2).toString());
-       
-       Atr1 = jTextField1.getText();
-       System.out.println("Nome 1: "+Atr1);
+        TableModel model = (TableModel) jTable1.getModel();
+        int selectedRow = jTable1.getSelectedRow();
+        jTextField1.setText(model.getValueAt(selectedRow, 0).toString());
+        jTextField2.setText(model.getValueAt(selectedRow, 1).toString());
+        jTextField5.setText(model.getValueAt(selectedRow, 2).toString());
+
+        Atr1 = jTextField1.getText();
+        System.out.println("Nome 1: " + Atr1);
         Atr2 = jTextField2.getText();
-       System.out.println("Designacao 1: "+Atr2);
-     
-       
+        System.out.println("Designacao 1: " + Atr2);
+
+
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-          String isolationLevel = jComboBox1.getSelectedItem().toString();
-           //Variaveis do Update Normal
-           /*
+        String isolationLevel = jComboBox1.getSelectedItem().toString();
+        //Variaveis do Update Normal
+        /*
            String sqlN ="update Factura set Nome = ? where Factura.FacturaID = ? ;";
            String sql1N ="update FactLinha set Designacao = ? where FactLinha.FacturaID = ? and ProdutoID =  ? ;";
           // String sql2N ="Begin Transaction update FactLinha set Preco = ? where FactLinha.FacturaID = ? and ProdutoID =  ? insert Into LogOperations(EventType,Objecto,Valor) Values('U','Preco',?); commit;";
            String queryN ="select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?;";
-           */
-           //Variaveis do Read Uncommited
-           String sqlISO ="update Factura set Nome = ? where Factura.FacturaID = ?  set transaction isolation level " + isolationLevel+" select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ? WAITFOR DELAY  '00:00:10';";
-           String sql1ISO ="update FactLinha set Designacao = ? where FactLinha.FacturaID = ? and ProdutoID =  ? set transaction isolation level " + isolationLevel+" select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?; WAITFOR DELAY '00:00:10';";
-           String sql2ISO="update Factura set Nome = ? where Factura.FacturaID = ? update FactLinha set Designacao = ? where FactLinha.FacturaID = ? and ProdutoID =  ? set transaction isolation level " + isolationLevel+" select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?; WAITFOR DELAY '00:00:10';";
-          // String sql2RU ="update FactLinha set Preco = ? where FactLinha.FacturaID = ? and ProdutoID =  ? WAITFOR DELAY '00:00:10';";
-          /* 
+         */
+        //Variaveis do Read Uncommited
+        String sqlISO = "update Factura set Nome = ? where Factura.FacturaID = ?  set transaction isolation level " + isolationLevel + " select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ? WAITFOR DELAY  '00:00:10';";
+        String sql1ISO = "update FactLinha set Designacao = ? where FactLinha.FacturaID = ? and ProdutoID =  ? set transaction isolation level " + isolationLevel + " select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?; WAITFOR DELAY '00:00:10';";
+        String sql2ISO = "update Factura set Nome = ? where Factura.FacturaID = ? update FactLinha set Designacao = ? where FactLinha.FacturaID = ? and ProdutoID =  ? set transaction isolation level " + isolationLevel + " select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?; WAITFOR DELAY '00:00:10';";
+        // String sql2RU ="update FactLinha set Preco = ? where FactLinha.FacturaID = ? and ProdutoID =  ? WAITFOR DELAY '00:00:10';";
+        /* 
           String queryRU ="SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED select Nome,Designacao,ProdutoID from Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?;";
          String queryRC ="SET TRANSACTION ISOLATION LEVEL READ COMMITTED select Nome,Designacao,ProdutoID from Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?;";
          String queryRR ="SET TRANSACTION ISOLATION LEVEL REPEATABLE READ select Nome,Designacao,ProdutoID from Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?;";
          String queryS ="SET TRANSACTION ISOLATION LEVEL SERIALIZABLE select Nome,Designacao,ProdutoID from Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?;";
-          */
-          String query = "set transaction isolation level " + isolationLevel+" select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?;";
-          switch(jComboBox1.getSelectedIndex()){
-                      case 0: 
-                          System.out.println("Selecione:");
-                          JOptionPane.showMessageDialog(this, "Selecione o Nivel de Isolamento");
-                          break;
-                      case 1:
-                           //update_normal(sqlN, sql1N,queryN);
-                          executar(sqlISO, sql1ISO,sql2ISO);
-                          select_table(query);
-                           break;
-                      case 2:
-                            executar(sqlISO, sql1ISO,sql2ISO);
-                  
-                            select_table(query);
-                           break;
-                      case 3:
-                             executar(sqlISO, sql1ISO,sql2ISO);
-                              select_table(query);
-                              break;
-                      case 4:
-                              executar(sqlISO, sql1ISO,sql2ISO);
-                               select_table(query);
-                               break;
-             
-                     
-              }
-           
-            
-      
-             
-           
-    
+         */
+        String query = "set transaction isolation level " + isolationLevel + " select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?;";
+        switch (jComboBox1.getSelectedIndex()) {
+            case 0:
+                System.out.println("Selecione:");
+                JOptionPane.showMessageDialog(this, "Selecione o Nivel de Isolamento");
+                break;
+            case 1:
+                //update_normal(sqlN, sql1N,queryN);
+                executar(sqlISO, sql1ISO, sql2ISO);
+                select_table(query);
+                break;
+            case 2:
+                executar(sqlISO, sql1ISO, sql2ISO);
+
+                select_table(query);
+                break;
+            case 3:
+                executar(sqlISO, sql1ISO, sql2ISO);
+                select_table(query);
+                break;
+            case 4:
+                executar(sqlISO, sql1ISO, sql2ISO);
+                select_table(query);
+                break;
+
+        }
+
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -698,11 +678,11 @@ public class Edit extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton1KeyPressed
-     
+
     }//GEN-LAST:event_jButton1KeyPressed
 
     private void jButton1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MousePressed
-           
+
     }//GEN-LAST:event_jButton1MousePressed
 
     /**
@@ -761,6 +741,5 @@ public class Edit extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
     // End of variables declaration//GEN-END:variables
-
 
 }
