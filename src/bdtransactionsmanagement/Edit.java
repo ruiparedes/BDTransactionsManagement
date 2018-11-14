@@ -166,7 +166,7 @@ public class Edit extends javax.swing.JFrame {
 
         jLabel9.setText("Nivel de Isolamento");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione:", "Update Normal", "Read Uncommitted", "Read Committed", "Repeatable Read", "Serializable" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione:", "Update Normal", "Read Uncommitted", "Read Committed", "Repeatable Read ", "Serializable" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
