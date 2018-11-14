@@ -1,17 +1,13 @@
 package bdtransactionsmanagement;
 
 import java.awt.HeadlessException;
-import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import net.proteanit.sql.DbUtils;
 
@@ -21,6 +17,7 @@ import net.proteanit.sql.DbUtils;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 /**
  *
  * @author jelfr
@@ -32,18 +29,21 @@ public class Edit extends javax.swing.JFrame {
      */
     public Edit() {
         initComponents();
-        jTable1.getColumnModel().getColumn(2).setMinWidth(0);
-        jTable1.getColumnModel().getColumn(2).setMaxWidth(0);
-        jTextField5.setVisible(false);
-
+   jTable1.getColumnModel().getColumn(2).setMinWidth(0);
+    jTable1.getColumnModel().getColumn(2).setMaxWidth(0);
+    jTextField5.setVisible(false);
+    
     }
 
     String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     String url = "jdbc:sqlserver://;databaseName=TBD_TRAB1";
-    String username = "Admin";
-    String password = "123qwe.";
+   // String username = "Admin";
+    //String password = "123qwe.";
+    String username = "galactic21";
+    String password = "wanrltw1";
     String Atr1 = null;
     String Atr2 = null;
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -166,7 +166,11 @@ public class Edit extends javax.swing.JFrame {
 
         jLabel9.setText("Nivel de Isolamento");
 
+<<<<<<< HEAD
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione:", "Update Normal", "Read Uncommitted", "Read Committed", "Repeatable Read", "Serializable" }));
+=======
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione:", "Read Uncommitted", "Read Committed", "Repeatable Read ", "Serializable" }));
+>>>>>>> 009a8fa5cffe7d2317517f6d5290486613579287
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -176,28 +180,11 @@ public class Edit extends javax.swing.JFrame {
                 .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(49, 49, 49)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGap(142, 142, 142)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
                                     .addGroup(layout.createSequentialGroup()
@@ -217,23 +204,47 @@ public class Edit extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jTextField2)
                                     .addComponent(jTextField1))))
-                        .addGap(12, 12, 12))))
+                        .addGap(12, 12, 12))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(49, 49, 49)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(26, 26, 26)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(5, 5, 5)
+                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel9)
+                        .addGap(18, 18, 18)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel5))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
@@ -249,19 +260,13 @@ public class Edit extends javax.swing.JFrame {
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(87, 87, 87)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel7)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel8)))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel9)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel8)))))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel6)))
@@ -272,9 +277,9 @@ public class Edit extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        String isolationLevel = jComboBox1.getSelectedItem().toString();
-        select_table("set transaction isolation level " + isolationLevel + " select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?;");
-
+         String isolationLevel = jComboBox1.getSelectedItem().toString();
+        select_table("set transaction isolation level " + isolationLevel+" select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?;");
+  
     }//GEN-LAST:event_jButton2ActionPerformed
 
     public String gerarReferencia() {
@@ -334,56 +339,6 @@ public class Edit extends javax.swing.JFrame {
         return sql;
     }
 
-    private void update_normal(String sql, String sql1, String query) {
-        long tinicial = System.currentTimeMillis();
-        String referencia = gerarReferencia();
-        try {
-            queryLog("insert Into LogOperations(EventType,Objecto,Valor,Referencia) Values('U','Begin Transaction',?,'" + referencia + "')");
-            // text1 = jTextField1.getText();
-            System.out.println("\nNome 2:" + Atr1);
-            System.out.println("\nDesignacao 2: " + Atr2);
-            if (Atr1.matches(jTextField1.getText()) && Atr2.matches(jTextField2.getText())) {
-                JOptionPane.showMessageDialog(this, "Nenhum campo foi alterado!");
-
-            } else {
-
-                if (Atr1.matches(jTextField1.getText()) && !Atr2.matches(jTextField2.getText())) {
-
-                    Statement2(sql1);
-                    select_table(query);
-                    System.out.println("O campo nome nao foi alterado\n");
-
-                } else if (Atr2.matches(jTextField2.getText()) && !Atr1.matches(jTextField1.getText())) {
-
-                    Statement1(sql);
-                    select_table(query);
-                    System.out.println("O campo Designacao nao foi alterado\n");
-
-                } else if (!Atr2.matches(jTextField2.getText()) && !Atr1.matches(jTextField1.getText())) {
-                    Statement3(sql, sql1);
-                    select_table(query);
-                    //
-                    System.out.println("O campo Designacao e nome foram alterado\n");
-
-                }
-
-                long tfinal = System.currentTimeMillis() - tinicial;
-
-                // jTextField6.setText(String.valueOf(total)); 
-                jTextField7.setText(String.valueOf((tfinal) / 1000.0));
-
-                System.out.println("Tempo de Update = " + (tfinal) / 1000.0 + " segundos\n");
-
-                JOptionPane.showMessageDialog(this, "Update com sucesso");
-                queryLog("insert Into LogOperations(EventType,Objecto,Valor,Referencia) Values('U','Commit',?,'" + referencia + "')");
-            }
-
-        } catch (HeadlessException | ClassNotFoundException | SQLException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-            queryLog("insert Into LogOperations(EventType,Objecto,Valor,Referencia) Values('U','Rollback',?,'" + referencia + "')");
-        }
-    }
-
     private void queryLog(String query) {
 
         try {
@@ -400,98 +355,39 @@ public class Edit extends javax.swing.JFrame {
         }
     }
 
-    private void Statement1(String sql) throws ClassNotFoundException, SQLException {
-        Class.forName(driver);
-        Connection con = DriverManager.getConnection(url, username, password);
-        try {
 
-            con.setAutoCommit(false);
-
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setString(1, jTextField1.getText());
-            Atr1 = jTextField1.getText();
-            // System.out.println(" Texto 3:"+text1);
-            pst.setString(2, jTextField3.getText());
-
-            pst.executeUpdate();
-
-            con.commit();
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-            con.rollback();
-        }
-    }
-
-    private void Statement2(String sql) throws ClassNotFoundException, SQLException {
-        Class.forName(driver);
-        Connection con = DriverManager.getConnection(url, username, password);
-        try {
-
-            con.setAutoCommit(false);
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setString(1, jTextField2.getText());
-            Atr2 = jTextField2.getText();
-            pst.setString(2, jTextField3.getText());
-            pst.setString(3, jTextField5.getText());
-            //pst.setString(4, jTextField2.getText());
-            pst.executeUpdate();
-            con.commit();
-            //JOptionPane.showMessageDialog(this, "Update com sucesso");
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-            con.rollback();
-        }
-    }
-
-    private void Statement3(String sql, String sql2) throws ClassNotFoundException, SQLException {
-        Class.forName(driver);
-        Connection con = DriverManager.getConnection(url, username, password);
-        try {
-
-            con.setAutoCommit(false);
-            Statement1(sql);
-            Statement2(sql2);
-            con.commit();
-
-        } catch (ClassNotFoundException | SQLException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-            con.rollback();
-        }
-    }
-
-    private void executar(String sql, String sql1, String sql2) {
-        long tinicial = System.currentTimeMillis();
-        String referencia = gerarReferencia();
-
-        try {
-
-            queryLog("insert Into LogOperations(EventType,Objecto,Valor,Referencia) Values('U','Begin Transaction',?,'" + referencia + "')");
-            System.out.println("\nNome 3:" + Atr1);
-            System.out.println("\nDesignacao 3: " + Atr2);
-            if (Atr1.matches(jTextField1.getText()) && Atr2.matches(jTextField2.getText())) {
-                JOptionPane.showMessageDialog(this, "Nenhum campo foi alterado!");
-
-            } else {
-
-                if (Atr1.matches(jTextField1.getText()) && !Atr2.matches(jTextField2.getText())) {
-
-                    Statement5(sql1);
-
-                    System.out.println("O campo nome nao foi alterado\n");
-
-                    //   JOptionPane.showMessageDialog(this, "O campo Nome não foi alterado");
-                } else if (Atr2.matches(jTextField2.getText()) && !Atr1.matches(jTextField1.getText())) {
-
-                    Statement4(sql);
-
-                    System.out.println("O campo Designacao nao foi alterado\n");
-
-                } else if (!Atr2.matches(jTextField2.getText()) && !Atr1.matches(jTextField1.getText())) {
-                    Statement6(sql2);
-
-                    //JOptionPane.showMessageDialog(this, "Update com sucesso");
+       private void executar(String sql,String sql1,String sql2){
+          long tinicial =System.currentTimeMillis();
+ String referencia = gerarReferencia();
+        try{
+           
+         
+              System.out.println("\nNome 3:"+Atr1);
+                 System.out.println("\nDesignacao 3: "+Atr2);
+                 if(Atr1.matches(jTextField1.getText()) && Atr2.matches(jTextField2.getText())){
+                     JOptionPane.showMessageDialog(this, "Nenhum campo foi alterado!");
+            
+                 }else{
+                     queryLog("insert Into LogOperations(EventType,Objecto,Valor,Referencia) Values('U','Begin Transaction',?,'" + referencia + "')");
+                 if(Atr1.matches(jTextField1.getText()) && !Atr2.matches(jTextField2.getText())){
+              
+                       Statement5(sql1);
+                  
+               System.out.println("O campo nome nao foi alterado\n");
+                  
+              //   JOptionPane.showMessageDialog(this, "O campo Nome não foi alterado");
+              }else if(Atr2.matches(jTextField2.getText())&& !Atr1.matches(jTextField1.getText())){
+              
+                     Statement4(sql);
+                  
+         System.out.println("O campo Designacao nao foi alterado\n");
+                    
+                  }
+              
+                else if(!Atr2.matches(jTextField2.getText()) && !Atr1.matches(jTextField1.getText())){
+                Statement6(sql2);
+              
+                //JOptionPane.showMessageDialog(this, "Update com sucesso");
                     System.out.println("O campo Designacao e nome foram alterado\n");
 
                 }
@@ -522,30 +418,51 @@ public class Edit extends javax.swing.JFrame {
             queryLog("insert Into LogOperations(EventType,Objecto,Valor,Referencia) Values('U','Rollback',?,'" + referencia + "')");
 
         }
-    }
+       }
+    
+    
+    private void Statement4(String sql) throws ClassNotFoundException, SQLException{
+     Class.forName(driver);
+            Connection con = DriverManager.getConnection(url, username, password);
+        try{
+                
 
-    private void Statement4(String sql) throws ClassNotFoundException, SQLException {
-        Class.forName(driver);
-        Connection con = DriverManager.getConnection(url, username, password);
-        try {
-
-            con.setAutoCommit(false);
-            PreparedStatement pst = con.prepareStatement(sql);
-
-            pst.setString(1, jTextField1.getText());
-            Atr1 = jTextField1.getText();
-            // System.out.println(" Texto 3:"+text1);
-            pst.setString(2, jTextField3.getText());
-            pst.setString(3, jTextField3.getText());
-
-            pst.executeUpdate();
-
-            //select_table(query);
-            con.commit();
-
-        } catch (SQLException e) {
+          con.setAutoCommit(false);
+                     PreparedStatement pst = con.prepareStatement(sql);
+                  
+                     pst.setString(1, jTextField1.getText());
+                     Atr1 = jTextField1.getText();
+                    // System.out.println(" Texto 3:"+text1);
+                     pst.setString(2, jTextField3.getText());
+                      pst.setString(3, jTextField3.getText());
+                 
+                      switch(jComboBox1.getSelectedIndex()){
+                      case 0: 
+                          System.out.println("Selecione:");
+                          JOptionPane.showMessageDialog(this, "Selecione o Nivel de Isolamento");
+                          break;
+                      case 1:
+                          con.setTransactionIsolation(con.TRANSACTION_READ_UNCOMMITTED);
+                           break;
+                      case 2:
+                           con.setTransactionIsolation(con.TRANSACTION_READ_COMMITTED);
+                           break;
+                      case 3:
+                          con.setTransactionIsolation(con.TRANSACTION_REPEATABLE_READ);
+                              break;
+                      case 4:
+                              con.setTransactionIsolation(con.TRANSACTION_SERIALIZABLE);
+                               break;
+           
+              }
+               
+                           pst.executeUpdate();
+           
+                      con.commit();
+                 
+             }catch (SQLException e){
             JOptionPane.showMessageDialog(this, e.getMessage());
-            con.rollback();
+           con.rollback();
         }
     }
 
@@ -561,7 +478,25 @@ public class Edit extends javax.swing.JFrame {
             pst.setString(2, jTextField3.getText());
             pst.setString(3, jTextField5.getText());
             pst.setString(4, jTextField3.getText());
-
+            switch(jComboBox1.getSelectedIndex()){
+                      case 0: 
+                          System.out.println("Selecione:");
+                          JOptionPane.showMessageDialog(this, "Selecione o Nivel de Isolamento");
+                          break;
+                      case 1:
+                          con.setTransactionIsolation(con.TRANSACTION_READ_UNCOMMITTED);
+                           break;
+                      case 2:
+                           con.setTransactionIsolation(con.TRANSACTION_READ_COMMITTED);
+                           break;
+                      case 3:
+                          con.setTransactionIsolation(con.TRANSACTION_REPEATABLE_READ);
+                              break;
+                      case 4:
+                              con.setTransactionIsolation(con.TRANSACTION_SERIALIZABLE);
+                               break;
+           
+              }
             pst.executeUpdate();
             // select_table(query);
 
@@ -590,6 +525,25 @@ public class Edit extends javax.swing.JFrame {
             pst.setString(4, jTextField3.getText());
             pst.setString(5, jTextField5.getText());
             pst.setString(6, jTextField3.getText());
+             switch(jComboBox1.getSelectedIndex()){
+                      case 0: 
+                          System.out.println("Selecione:");
+                          JOptionPane.showMessageDialog(this, "Selecione o Nivel de Isolamento");
+                          break;
+                      case 1:
+                          con.setTransactionIsolation(con.TRANSACTION_READ_UNCOMMITTED);
+                           break;
+                      case 2:
+                           con.setTransactionIsolation(con.TRANSACTION_READ_COMMITTED);
+                           break;
+                      case 3:
+                          con.setTransactionIsolation(con.TRANSACTION_REPEATABLE_READ);
+                              break;
+                      case 4:
+                              con.setTransactionIsolation(con.TRANSACTION_SERIALIZABLE);
+                               break;
+           
+              }
             pst.executeUpdate();
 
             // select_table(query);
@@ -617,54 +571,28 @@ public class Edit extends javax.swing.JFrame {
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String isolationLevel = jComboBox1.getSelectedItem().toString();
-        //Variaveis do Update Normal
-        /*
+          String isolationLevel = jComboBox1.getSelectedItem().toString();
+           //Variaveis do Update Normal
+           /*
            String sqlN ="update Factura set Nome = ? where Factura.FacturaID = ? ;";
            String sql1N ="update FactLinha set Designacao = ? where FactLinha.FacturaID = ? and ProdutoID =  ? ;";
           // String sql2N ="Begin Transaction update FactLinha set Preco = ? where FactLinha.FacturaID = ? and ProdutoID =  ? insert Into LogOperations(EventType,Objecto,Valor) Values('U','Preco',?); commit;";
            String queryN ="select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?;";
-         */
-        //Variaveis do Read Uncommited
-        String sqlISO = "update Factura set Nome = ? where Factura.FacturaID = ?  set transaction isolation level " + isolationLevel + " select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ? WAITFOR DELAY  '00:00:10';";
-        String sql1ISO = "update FactLinha set Designacao = ? where FactLinha.FacturaID = ? and ProdutoID =  ? set transaction isolation level " + isolationLevel + " select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?; WAITFOR DELAY '00:00:10';";
-        String sql2ISO = "update Factura set Nome = ? where Factura.FacturaID = ? update FactLinha set Designacao = ? where FactLinha.FacturaID = ? and ProdutoID =  ? set transaction isolation level " + isolationLevel + " select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?; WAITFOR DELAY '00:00:10';";
-        // String sql2RU ="update FactLinha set Preco = ? where FactLinha.FacturaID = ? and ProdutoID =  ? WAITFOR DELAY '00:00:10';";
-        /* 
+           */
+           //Variaveis do Read Uncommited
+           String sqlISO = "update Factura set Nome = ? where Factura.FacturaID = ? select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ? WAITFOR DELAY  '00:00:10';";
+           String sql1ISO ="update FactLinha set Designacao = ? where FactLinha.FacturaID = ? and ProdutoID =  ? select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?; WAITFOR DELAY '00:00:10';";
+           String sql2ISO="update Factura set Nome = ? where Factura.FacturaID = ? update FactLinha set Designacao = ? where FactLinha.FacturaID = ? and ProdutoID =  ? select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?; WAITFOR DELAY '00:00:10';";
+          // String sql2RU ="update FactLinha set Preco = ? where FactLinha.FacturaID = ? and ProdutoID =  ? WAITFOR DELAY '00:00:10';";
+          /* 
           String queryRU ="SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED select Nome,Designacao,ProdutoID from Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?;";
          String queryRC ="SET TRANSACTION ISOLATION LEVEL READ COMMITTED select Nome,Designacao,ProdutoID from Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?;";
          String queryRR ="SET TRANSACTION ISOLATION LEVEL REPEATABLE READ select Nome,Designacao,ProdutoID from Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?;";
          String queryS ="SET TRANSACTION ISOLATION LEVEL SERIALIZABLE select Nome,Designacao,ProdutoID from Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?;";
-         */
-        String query = "set transaction isolation level " + isolationLevel + " select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?;";
-        switch (jComboBox1.getSelectedIndex()) {
-            case 0:
-                System.out.println("Selecione:");
-                JOptionPane.showMessageDialog(this, "Selecione o Nivel de Isolamento");
-                break;
-            case 1:
-                //update_normal(sqlN, sql1N,queryN);
-                executar(sqlISO, sql1ISO, sql2ISO);
-                select_table(query);
-                break;
-            case 2:
-                executar(sqlISO, sql1ISO, sql2ISO);
-
-                select_table(query);
-                break;
-            case 3:
-                executar(sqlISO, sql1ISO, sql2ISO);
-                select_table(query);
-                break;
-            case 4:
-                executar(sqlISO, sql1ISO, sql2ISO);
-                select_table(query);
-                select_table(query);
-                break;
-
-        }
-
-
+          */
+          String query = "set transaction isolation level " + isolationLevel+" select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?;";
+          executar(sqlISO, sql1ISO,sql2ISO);
+          select_table(query);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
