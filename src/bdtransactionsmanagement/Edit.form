@@ -294,7 +294,7 @@
             <StringItem index="1" value="Update Normal"/>
             <StringItem index="2" value="Read Uncommitted"/>
             <StringItem index="3" value="Read Committed"/>
-            <StringItem index="4" value="Repeatable Read "/>
+            <StringItem index="4" value="Repeatable Read"/>
             <StringItem index="5" value="Serializable"/>
           </StringArray>
         </Property>
