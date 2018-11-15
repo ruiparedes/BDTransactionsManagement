@@ -26,12 +26,15 @@ import java.util.concurrent.ScheduledFuture;
  * @author Rui Paredes
  */
 public class BrowserUI extends javax.swing.JFrame {
-
+ 
     private ScheduledFuture<?> futureTask;
     private Runnable refreshRunnable;
     private ScheduledExecutorService scheduledExecutorService;
     public int refreshTime = 1;
     public int faturaSelecionada = -1;
+    public String oldIsolationLevel = "Read Uncommitted";
+    public String isolationLevelSelected = null;
+//    public String setTransactionIL = "set transaction isolation level " + oldIsolationLevel;
 
     /**
      * Creates new form BrowserUI
@@ -39,14 +42,14 @@ public class BrowserUI extends javax.swing.JFrame {
     public BrowserUI() {
         initComponents();
         getFaturasTable();
-
+//        ResultSet resSetTransactionIL = resultadoQuery(setTransactionIL);
         refreshTime_textField.setHorizontalAlignment(refreshTime_textField.CENTER);
         scheduledExecutorService = Executors.newScheduledThreadPool(5);
 
         refreshRunnable = new Runnable() {
             @Override
             public void run() {
-                System.out.println("Tempo refresh:" + refreshTime);
+                //System.out.println("Tempo refresh:" + refreshTime);
                 getFaturasTable();
                 getFaturasListaTable(faturaSelecionada);
             }
@@ -77,7 +80,6 @@ public class BrowserUI extends javax.swing.JFrame {
         refresh_button = new javax.swing.JButton();
         isolationLevel_comboBox = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
-        test_button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Browser");
@@ -190,21 +192,14 @@ public class BrowserUI extends javax.swing.JFrame {
 
         isolationLevel_comboBox.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         isolationLevel_comboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Read Uncommitted", "Read Committed", "Repeatable Read", "Serializable" }));
+        isolationLevel_comboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                isolationLevel_comboBoxActionPerformed(evt);
+            }
+        });
 
         jLabel6.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         jLabel6.setText("Nível de Isolamento:");
-
-        test_button.setText("Vaidar");
-        test_button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                test_buttonMouseClicked(evt);
-            }
-        });
-        test_button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                test_buttonActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -232,8 +227,6 @@ public class BrowserUI extends javax.swing.JFrame {
                                         .addComponent(refresh_button)
                                         .addGap(34, 34, 34))))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(test_button)
-                                .addGap(105, 105, 105)
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(isolationLevel_comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -253,11 +246,8 @@ public class BrowserUI extends javax.swing.JFrame {
                         .addGap(44, 44, 44)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(isolationLevel_comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(62, 62, 62)
-                        .addComponent(test_button)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                            .addComponent(jLabel6))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel4)
@@ -300,7 +290,7 @@ public void changeReadInterval(long time) {
         int column = 0;
         int row = Faturas_Table.getSelectedRow();
         int faturaID = (Integer) Faturas_Table.getModel().getValueAt(row, column);
-        System.out.println(faturaID);
+        //System.out.println(faturaID);
         faturaSelecionada = faturaID;
         getFaturasListaTable(faturaID);
 
@@ -316,28 +306,53 @@ public void changeReadInterval(long time) {
 
     private void refresh_buttonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refresh_buttonMouseClicked
         refreshTime = Integer.parseInt(refreshTime_textField.getText());
-        System.out.println("Tempo Atual de refresh:" + refreshTime);
+        //System.out.println("Tempo Atual de refresh:" + refreshTime);
         changeReadInterval(refreshTime);
     }//GEN-LAST:event_refresh_buttonMouseClicked
 
-    private void test_buttonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_test_buttonMouseClicked
-        Thread t1 = new Thread(new MultiQueries());
-        t1.start();
+    private void isolationLevel_comboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_isolationLevel_comboBoxActionPerformed
+        isolationLevelSelected = isolationLevel_comboBox.getSelectedItem().toString();
+        if (isolationLevelSelected != oldIsolationLevel) {
+            if (oldIsolationLevel == "Serializable" || oldIsolationLevel == "Repeatable Read") {
+                Sql sqlconnection = new Sql();
+                Connection conne = null;
+                Statement stmt = null;
+                try {
+                    conne = sqlconnection.conect();
+                    if (conne != null) {
+                        System.out.println("Commit realizado: " + oldIsolationLevel);
+                        conne.commit();
+                        changeReadInterval(refreshTime);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            oldIsolationLevel = isolationLevelSelected;
+//            String transactionIL = "set transaction isolation level " + oldIsolationLevel;
+//            ResultSet resSetNewTransactionIL = resultadoQuery(transactionIL);
+            System.out.println("Nivel de Isolamento:" + oldIsolationLevel);
+        }
 
-//resultadoQuery("Begin Transaction update Factura set Nome = 'JoaoFranchesca' where Factura.FacturaID = 1 WAITFOR DELAY '00:00:10' ROLLBACK;");
-    }//GEN-LAST:event_test_buttonMouseClicked
-
-    private void test_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_test_buttonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_test_buttonActionPerformed
+    }//GEN-LAST:event_isolationLevel_comboBoxActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public void getFaturasTable() {
-        String isolationLevel = isolationLevel_comboBox.getSelectedItem().toString();
-        String getFaturasQuery = "set transaction isolation level " + isolationLevel
-                + " SELECT * FROM dbo.Factura";
+        // String isolationLevel = isolationLevel_comboBox.getSelectedItem().toString();
+//        String getFaturasQuery = "set transaction isolation level " + isolationLevel
+//                + " SELECT * FROM dbo.Factura";
+        //String getFaturasQuery = "set transaction isolation level " + isolationLevel + " BEGIN TRAN SELECT * FROM dbo.Factura COMMIT";
+        String getFaturasQuery = null;
+        if(oldIsolationLevel == "Serializable" || oldIsolationLevel == "Repeatable Read"){
+            getFaturasQuery = "set transaction isolation level " + oldIsolationLevel + " BEGIN TRANSACTION SELECT * FROM dbo.Factura";
+        }
+        else{
+            getFaturasQuery = "set transaction isolation level " + oldIsolationLevel + " BEGIN TRANSACTION SELECT * FROM dbo.Factura;Commit;";
+        }
+        
+        
         ResultSet resFaturas = resultadoQuery(getFaturasQuery);
         Faturas_Table.setModel(DbUtils.resultSetToTableModel(resFaturas));
         Faturas_Table.setDefaultEditor(Object.class, null);
@@ -346,7 +361,13 @@ public void changeReadInterval(long time) {
 
     public void getFaturasListaTable(int faturaID) {
         String isolationLevel = isolationLevel_comboBox.getSelectedItem().toString();
-        String getFaturaListaQuery = "set transaction isolation level " + isolationLevel + " SELECT * FROM dbo.FactLinha where FacturaID =" + faturaID;
+        String getFaturaListaQuery = null;
+        if(isolationLevel == "Serializable" || isolationLevel == "Repeatable Read"){
+          getFaturaListaQuery = "set transaction isolation level " + oldIsolationLevel + " BEGIN TRANSACTION SELECT * FROM dbo.FactLinha where FacturaID =" + faturaID;  
+        }
+        else{
+          getFaturaListaQuery = "set transaction isolation level " + oldIsolationLevel + " BEGIN TRANSACTION SELECT * FROM dbo.FactLinha where FacturaID =" + faturaID + ";Commit;";  
+        }
         ResultSet resFaturaLista = resultadoQuery(getFaturaListaQuery);
         FaturaLinhas_Table.setModel(DbUtils.resultSetToTableModel(resFaturaLista));
         FaturaLinhas_Table.setDefaultEditor(Object.class, null);
@@ -393,9 +414,10 @@ public void changeReadInterval(long time) {
         Statement stmt = null;
         try {
             conne = sqlconnection.conect();
+            //conne.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
 
             if (conne != null) {
-
+//                conne.setAutoCommit(false);
                 stmt = conne.createStatement();
                 String selectQ = query;
                 ResultSet rset = stmt.executeQuery(selectQ);
@@ -422,6 +444,5 @@ public void changeReadInterval(long time) {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField refreshTime_textField;
     private javax.swing.JButton refresh_button;
-    private javax.swing.JButton test_button;
     // End of variables declaration//GEN-END:variables
 }

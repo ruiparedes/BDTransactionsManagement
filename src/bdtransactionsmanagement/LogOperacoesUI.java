@@ -25,6 +25,8 @@ public class LogOperacoesUI extends javax.swing.JFrame {
     private Runnable refreshRunnable;
     private ScheduledExecutorService scheduledExecutorService;
     public int refreshTime = 1;
+    public String oldIsolationLevel = "Read Uncommitted";
+    public String isolationLevelSelected = null;
 
     /**
      * Creates new form LogOperacoesUI
@@ -40,6 +42,7 @@ public class LogOperacoesUI extends javax.swing.JFrame {
             @Override
             public void run() {
                 //System.out.println("Tempo refresh:" + refreshTime);
+                getLogOperationsTable(nOperations_textField.getText());
 
             }
         };
@@ -76,13 +79,8 @@ public class LogOperacoesUI extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         refresh_textField = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        verOperacoes_button = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
-        goToEdit_Button = new javax.swing.JButton();
-        goToBrowser_Button = new javax.swing.JButton();
-        goToWork_Button = new javax.swing.JButton();
-        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(800, 600));
@@ -148,61 +146,21 @@ public class LogOperacoesUI extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         jLabel4.setText("(s)");
 
-        verOperacoes_button.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        verOperacoes_button.setText("Ver Operações");
-        verOperacoes_button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                verOperacoes_buttonMouseClicked(evt);
-            }
-        });
-        verOperacoes_button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                verOperacoes_buttonActionPerformed(evt);
-            }
-        });
-
         jLabel5.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         jLabel5.setText("Nível de Isolamento:");
 
         jComboBox1.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Read Uncommitted", "Read Committed", "Repeatable Read", "Serializable" }));
-
-        goToEdit_Button.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        goToEdit_Button.setText("Edit");
-        goToEdit_Button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                goToEdit_ButtonMouseClicked(evt);
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
             }
         });
-
-        goToBrowser_Button.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        goToBrowser_Button.setText("Browser");
-        goToBrowser_Button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                goToBrowser_ButtonMouseClicked(evt);
-            }
-        });
-
-        goToWork_Button.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        goToWork_Button.setText("Work");
-
-        jLabel6.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
-        jLabel6.setText("Interfaces");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(goToEdit_Button)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel6)
-                    .addComponent(goToBrowser_Button))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(goToWork_Button)
-                .addGap(19, 19, 19))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(34, 34, 34)
                 .addComponent(jLabel1)
@@ -215,8 +173,6 @@ public class LogOperacoesUI extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(nOperations_textField, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(verOperacoes_button)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -242,14 +198,7 @@ public class LogOperacoesUI extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addComponent(jLabel1)
-                .addGap(26, 26, 26)
-                .addComponent(jLabel6)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(goToEdit_Button)
-                    .addComponent(goToBrowser_Button)
-                    .addComponent(goToWork_Button))
-                .addGap(67, 67, 67)
+                .addGap(154, 154, 154)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -260,8 +209,7 @@ public class LogOperacoesUI extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(jButton1)
                     .addComponent(refresh_textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(verOperacoes_button))
+                    .addComponent(jLabel4))
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25)
@@ -287,38 +235,49 @@ public class LogOperacoesUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_nOperations_textFieldActionPerformed
 
-    private void verOperacoes_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verOperacoes_buttonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_verOperacoes_buttonActionPerformed
-
-    private void verOperacoes_buttonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_verOperacoes_buttonMouseClicked
-        String nOperacoes = nOperations_textField.getText();
-        getLogOperationsTable(nOperacoes);
-    }//GEN-LAST:event_verOperacoes_buttonMouseClicked
-
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-      refreshTime = Integer.parseInt(refresh_textField.getText());
+        refreshTime = Integer.parseInt(refresh_textField.getText());
         System.out.println("Tempo Atual de refresh:" + refreshTime);
         changeReadInterval(refreshTime);
     }//GEN-LAST:event_jButton1MouseClicked
 
-    private void goToEdit_ButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_goToEdit_ButtonMouseClicked
-        Edit edit = new Edit();
-        edit.setVisible(true);
-    }//GEN-LAST:event_goToEdit_ButtonMouseClicked
-
-    private void goToBrowser_ButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_goToBrowser_ButtonMouseClicked
-        BrowserUI browser = new BrowserUI();
-        browser.setVisible(true);
-    }//GEN-LAST:event_goToBrowser_ButtonMouseClicked
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        isolationLevelSelected = jComboBox1.getSelectedItem().toString();
+        if (isolationLevelSelected != oldIsolationLevel) {
+            if (oldIsolationLevel == "Serializable" || oldIsolationLevel == "Repeatable Read") {
+                Sql sqlconnection = new Sql();
+                Connection conne = null;
+                Statement stmt = null;
+                try {
+                    conne = sqlconnection.conect();
+                    if (conne != null) {
+                        System.out.println("Commit realizado: " + oldIsolationLevel);
+                        conne.commit();
+                        changeReadInterval(refreshTime);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            oldIsolationLevel = isolationLevelSelected;
+//            String transactionIL = "set transaction isolation level " + oldIsolationLevel;
+//            ResultSet resSetNewTransactionIL = resultadoQuery(transactionIL);
+            System.out.println("Nivel de Isolamento:" + oldIsolationLevel);
+        }
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public void getLogOperationsTable(String topOperations) {
 
-        String getFaturaListaQuery = "select TOP " + topOperations + " * from dbo.LogOperations order by DCriacao desc;";
-        ResultSet resFaturaLista = resultadoQuery(getFaturaListaQuery);
+        String getLogsQuery = null;
+        if (oldIsolationLevel == "Serializable" || oldIsolationLevel == "Repeatable Read") {
+            getLogsQuery = "set transaction isolation level " + oldIsolationLevel + " Begin Transaction select TOP " + topOperations + " * from dbo.LogOperations order by DCriacao desc;";
+        } else {
+            getLogsQuery = "set transaction isolation level " + oldIsolationLevel + " Begin Transaction select TOP " + topOperations + " * from dbo.LogOperations order by DCriacao desc;Commit;";
+        }
+        ResultSet resFaturaLista = resultadoQuery(getLogsQuery);
         logOperations_Table.setModel(DbUtils.resultSetToTableModel(resFaturaLista));
         logOperations_Table.setDefaultEditor(Object.class, null);
 
@@ -378,9 +337,6 @@ public class LogOperacoesUI extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton goToBrowser_Button;
-    private javax.swing.JButton goToEdit_Button;
-    private javax.swing.JButton goToWork_Button;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
@@ -388,13 +344,11 @@ public class LogOperacoesUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable logOperations_Table;
     private javax.swing.JTextField nOperations_textField;
     private javax.swing.JTextField refresh_textField;
-    private javax.swing.JButton verOperacoes_button;
     // End of variables declaration//GEN-END:variables
 }

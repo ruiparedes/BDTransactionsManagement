@@ -23,7 +23,6 @@ public class Sql {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection("jdbc:sqlserver://;databaseName=TBD_TRAB1", "Admin", "123qwe.");
-
             if (conn != null) {
                 System.out.println("Database Successfully connected");
                 return conn;

@@ -43,8 +43,8 @@ public class Edit extends javax.swing.JFrame {
     String url = "jdbc:sqlserver://;databaseName=TBD_TRAB1";
    // String username = "Admin";
     //String password = "123qwe.";
-    String username = "galactic21";
-    String password = "wanrltw1";
+    String username = "Admin";
+    String password = "123qwe.";
     String Atr1 = null;
     String Atr2 = null;
    
@@ -539,9 +539,9 @@ public class Edit extends javax.swing.JFrame {
            String queryN ="select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?;";
            */
            //Variaveis do Read Uncommited
-           String sqlISO = "update Factura set Nome = ? where Factura.FacturaID = ? select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ? WAITFOR DELAY  '00:00:10';";
-           String sql1ISO ="update FactLinha set Designacao = ? where FactLinha.FacturaID = ? and ProdutoID =  ? select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?; WAITFOR DELAY '00:00:10';";
-           String sql2ISO="update Factura set Nome = ? where Factura.FacturaID = ? update FactLinha set Designacao = ? where FactLinha.FacturaID = ? and ProdutoID =  ? select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?; WAITFOR DELAY '00:00:10';";
+           String sqlISO = "update Factura set Nome = ? where Factura.FacturaID = ? select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ? ;";
+           String sql1ISO ="update FactLinha set Designacao = ? where FactLinha.FacturaID = ? and ProdutoID =  ? select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?; ;";
+           String sql2ISO="update Factura set Nome = ? where Factura.FacturaID = ? update FactLinha set Designacao = ? where FactLinha.FacturaID = ? and ProdutoID =  ? select Nome,Designacao,ProdutoID from  Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?;";
           // String sql2RU ="update FactLinha set Preco = ? where FactLinha.FacturaID = ? and ProdutoID =  ? WAITFOR DELAY '00:00:10';";
           /* 
           String queryRU ="SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED select Nome,Designacao,ProdutoID from Factura,FactLinha where Factura.FacturaID = FactLinha.FacturaID and Factura.FacturaID = ?;";
