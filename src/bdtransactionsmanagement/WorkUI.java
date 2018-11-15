@@ -319,14 +319,15 @@ public class WorkUI extends javax.swing.JFrame {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            Random rand = new Random();
             int newfactid = maxfact +1;
             int cliente = 5;
             int produto1 = 10;
             int produto2 = 11;
             double preco1 = 10;
             double preco2 = 153.99;
-            int qtd1 = 1;
-            int qtd2 = 2;
+            int qtd1 = rand.nextInt(100);
+            int qtd2 = rand.nextInt(100);
             date = new Date() ;
             ref = dateFormat.format(date).toString();
             try {
